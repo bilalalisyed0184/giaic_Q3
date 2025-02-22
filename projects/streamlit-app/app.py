@@ -19,7 +19,7 @@ if uploaded_files:
             if file_ext == ".csv":
                 df = pd.read_csv(file)
             elif file_ext == ".xlsx":
-                df = pd.read_excel(file, engine='openpyxl')
+                df = pd.read_excel(file, engine='openpyxl')  # Ensure openpyxl is installed
             else:
                 st.error(f"Unsupported file type: {file_ext}")
                 continue
@@ -83,19 +83,20 @@ if uploaded_files:
             
             if conversion_type == "CSV":
                 df.to_csv(buffer, index=False)
-                file_name = file.name.replace(file_ext, ".csv")
+                file_name = os.path.splitext(file.name)[0] + ".csv"
                 mime_type = "text/csv"
             elif conversion_type == "Excel":
                 with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
                     df.to_excel(writer, index=False)
-                file_name = file.name.replace(file_ext, ".xlsx")
+                file_name = os.path.splitext(file.name)[0] + ".xlsx"
                 mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             
             buffer.seek(0)
+            
+            # Provide a workaround for downloading with a filename
             st.download_button(
                 label=f"⬇ Download {file.name} as {conversion_type}",
                 data=buffer.getvalue(),
-                filename=file_name,
                 mime=mime_type
             )
 
