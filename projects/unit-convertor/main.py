@@ -29,6 +29,20 @@ if os.path.exists("conversion_data.json"):
     with open("conversion_data.json", "r") as f:
         conversion_data = json.load(f)
 
+# Conversion function
+def convert_value(value, from_unit, to_unit, category):
+    if from_unit in conversion_data[category] and to_unit in conversion_data[category]:
+        return value * (conversion_data[category][to_unit] / conversion_data[category][from_unit])
+    return "Conversion not available"
+
+# Formula display function
+def get_formula(from_unit, to_unit, category, from_value, to_value):
+    return f"{from_value} {from_unit} × (conversion factor) = {to_value} {to_unit}"
+
+# Detailed explanation function
+def get_conversion_details(from_unit, to_unit, category, from_value, to_value):
+    return f"Converting {from_value} {from_unit} to {to_unit} based on standard conversion factors."
+
 # Main App UI
 st.markdown("<h1 class='main-header'>Multi-Unit Converter</h1>", unsafe_allow_html=True)
 st.markdown("<p class='sub-header'>Convert between different units of measurement</p>", unsafe_allow_html=True)
